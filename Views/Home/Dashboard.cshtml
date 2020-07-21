@@ -1,7 +1,7 @@
 ﻿@model AppyController.Models.FileUpload
 
 @{
-    ViewData["Title"] = "POC App";
+    ViewData["Title"] = "D3 POC App";
 
 
 }
@@ -22,7 +22,7 @@
     </div>
     <div class="" style="margin: 10px"></div>
     <div class="col-md-12 form-row">
-        <div class="card shadow col-md-5 button" id="btnOpenFileSearchModal">
+        <div class="card shadow col-md-5 button" id="btnOpenReceiptSearchModal">
             <div class="form-group" style="margin-top: 3%">
                 <h2 class="text-lg-center">Search Receipt</h2>
             </div>
@@ -37,73 +37,7 @@
 </div>
 
 @section Modals{
-    <div class="modal fade" id="uploadFileModal" role="dialog" data-backdrop="static" data-keyboard="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> <i class="far fa-times-circle text-danger"></i> </button>
-                </div>
-                <form class="form-horizontal" id="appForm" enctype="multipart/form-data" method="POST">
-
-                    <div class="modal-body">
-                        <div class="form-group row" style="display: none">
-                            <dl>
-                                <dt>
-                                    <label> Upload Your File </label>
-                                </dt>
-                                <dd>
-                                    <input name="FileUpload.FormFile" type="file" id="txtUploadfile" />
-                                </dd>
-                            </dl>
-
-                            <button type="submit" class="btn btn-primary" id="btnSumbit">Submit File</button>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-md-12">
-                                <div class="text-right">
-                                    <select class="form-control" id="selectCategory">
-                                        <option value="-1" selected>Select Category</option>
-                                        <option value="65a3e034-6767-492b-9e05-6130baf9895d">HCM Contract Files</option>
-                                        <option value="2d0d6593-9391-4e9e-a95a-9a28ce3a901c">HCM Purchase Receipt</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-md-12">
-                                <div class="text-right">
-                                    <select class="form-control" id="selectUser">
-                                        <option value="-1" selected>Select User</option>
-                                        <option value="3f47bdc0-7c26-489d-b0a9-080a5308cfc1">User Name One </option>
-                                        <option value="0d0189b5-65b4-4156-8eef-d18481762512">User Name Two</option>
-                                        <option value="3c1eae40-4c20-440a-a71e-a081e18e438a">User Name Three </option>
-                                        <option value="ca5ed84e-8fe8-41ca-9a83-f2663a136bff">User Name Four</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-md-12">
-                                <ul class="list-group">
-                                    <li class="list-group-item">File Name: <span id="pSelectedFileName"></span></li>
-                                    <li class="list-group-item">File Extension: <span id="pSelectedFileExt"></span></li>
-                                    <li class="list-group-item">File Type: <span id="pSelectedFileType"></span></li>
-                                </ul>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="modal-footer">
-                        <div class="pull-left"></div>
-                        <button type="button" class="btn btn-primary text-right project-add-button" id="btnUploadFile">Select File</button>
-                        <button type="button" class="btn btn-primary text-right project-add-button" id="btnSendFile">Upload File</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="fileSearchModal" role="dialog" data-backdrop="static" data-keyboard="true">
+    <div class="modal fade" id="contractSearchModal" role="dialog" data-backdrop="static" data-keyboard="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -114,27 +48,78 @@
                     <div class="modal-body">
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label for="filter">User Name</label>
-                                <select class="form-control" id="selectSearchUser">
-                                    <option value="-1" selected>Select User</option>
-                                    <option value="3f47bdc0-7c26-489d-b0a9-080a5308cfc1">User Name One </option>
-                                    <option value="0d0189b5-65b4-4156-8eef-d18481762512">User Name Two</option>
-                                    <option value="3c1eae40-4c20-440a-a71e-a081e18e438a">User Name Three </option>
-                                    <option value="ca5ed84e-8fe8-41ca-9a83-f2663a136bff">User Name Four</option>
-                                </select>
+                                <label class="control-label">Contract Name</label>
+                                <input class="form-control" type="text" name="contractPartnerSearch" id="contractPartnerSearch" required />
                             </div>
                             <div class="col-md-6">
-                                <label for="contain">Category</label>
-                                <select class="form-control" id="catId">
-                                    <option value="-1" selected>Select Category</option>
-                                    <option value="65a3e034-6767-492b-9e05-6130baf9895d">HCM Contract Files</option>
-                                    <option value="2d0d6593-9391-4e9e-a95a-9a28ce3a901c">HCM Purchase Receipt</option>
+                                <label class="control-label">Contract Type</label>
+                                <select class="form-control" id="contractTypeSearch">
+                                    <option value="-1" selected>Select Contract Type</option>
+                                    <option value="IT Services">IT Services</option>
+                                    <option value="Software Development">Software Development</option>
+                                    <option value="Product Purchases">Product Purchases </option>
+                                    <option value="Business Management">Business Management</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
+                            <div class="col-md-6">
+                                <label class="control-label">Date</label>
+                                <input class="form-control" type="date" name="contractDateSearch" id="contractDateSearch" required />
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <div class="col-md-12">
-                                <ul class="list-group" id="ul-all-files" style="font-size: 11px; overflow: auto; height: 500px;"></ul>
+                                <ul class="list-group" id="ul-contract-files" style="font-size: 11px; overflow: auto; height: 500px;"></ul>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <div class="pull-left"></div>
+                        <button type="button" class="btn btn-success btn-sm" id="btnSearcContractDoc"><span class="fa fa-search"></span> Search</button>
+                        <button type="reset" class="btn btn-link text-danger btn-sm" id="btnClose">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="receiptSearchModal" role="dialog" data-backdrop="static" data-keyboard="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> <i class="far fa-times-circle text-danger"></i> </button>
+                </div>
+                <form class="form-horizontal" id="1">
+
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <label class="control-label">Client's Name</label>
+                                <input class="form-control" type="text" name="receiptPartnerSearch" id="receiptPartnerSearch" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="filter">Receipt Type</label>
+                                <select class="form-control" id="receiptTypeSearch">
+                                    <option value="-1" selected>Select Receipt Type</option>
+                                    <option value="Systems Integration">Systems Integration</option>
+                                    <option value="Customer Care Support">Customer Care Support</option>
+                                    <option value="Application Upgrade">Application Upgrade</option>
+                                    <option value="Application Downgrade">Application Downgrade</option>
+                                    <option value="Application Purchase">Application Purchase</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-6">
+                                <label class="control-label">Date</label>
+                                <input class="form-control" type="date" name="receiptDateSearch" id="receiptDateSearch" required />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <ul class="list-group" id="ul-receipt-files" style="font-size: 11px; overflow: auto; height: 500px;"></ul>
                             </div>
                         </div>
 
