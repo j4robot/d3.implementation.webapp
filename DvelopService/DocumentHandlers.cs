@@ -15,7 +15,6 @@ namespace persol_poc_hustler.DvelopService
       
 
         private static string MEDIA_TYPE_HAL_JSON = "application/hal+json";
-        private static string MEDIA_TYPE_OCTET_STREAM = "application/octet-stream";
 
         //search document by given metadata
         public async Task<string> SearchDocument(string baseURI, string sessionId, string repoId, string searchFor)

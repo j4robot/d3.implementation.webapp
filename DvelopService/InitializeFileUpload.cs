@@ -32,17 +32,21 @@ namespace AppyController.DvelopService
 
                 try
                 {
-                    var documentLink = new FileHandlers().UploadFile(baseURI, sessionId, repoId, uploadFile, uploadMappingFile).Result;
+                    var documentLink = new FileHandlers(Configuration).UploadFile(baseURI, sessionId, repoId, uploadFile, uploadMappingFile).Result;
 
                     result = documentLink;
 
                 }
                 catch (Exception ex)
                 {
-                    result = "{error: 'Couldn't upload the file to D3'}";
+                    result = "Couldn't upload the file to D3";
                     Console.WriteLine(ex);
                 }
 
+            }
+            else
+            {
+                result = "D3 sessionId error";
             }
 
             return result;

@@ -59,25 +59,12 @@
 
     function postFile(formData) {
         try {
-
+            
             makeAPIRequest('/api/dvelop/uploadfile', 'FILE', formData, function (data) {
+                
                 try {
                     data = JSON.parse(data);
-
-                    console.log(data);
-
-                    let values = { map: JSON.stringify(createMap(data.fileName, data.oldFileName)), filePath: data.filePath };
-
-                    makeAPIRequest('/api/dvelop/savefile', 'POST', values, function (res) {
-                        try {
-                            console.log(res);
-                            $('#uploadFileModal').modal('hide');
-                            messenger('success');
-                        } catch (error) {
-                            console.log(error);
-                        }
-
-                    });
+                    postFileToD3(data)
 
                 } catch (error) {
                     console.log(error);
@@ -90,8 +77,30 @@
         }
     }
 
+    function postFileToD3(data) {
+        pageLoader('show');
+
+        makeAPIRequest('/api/dvelop/savefile', 'POST', { map: JSON.stringify(createMap(data.fileName, data.oldFileName)), filePath: data.filePath }, function (res) {
+            try {
+                console.log({ res });
+
+                if (res != "D3 sessionId error") {
+                    $('#uploadFileModal').modal('hide');
+                    messenger('success');
+                }
+                else {
+                    messenger('warning');
+                }
+
+            } catch (error) {
+                console.log(error);
+            }
+
+        });
+    }
+
     function searchForDocument(category, userName) {
-        //return { category, appName};
+
         let searchFor = `?sourceid=/dms/r/73215d3a-ea55-4555-9817-9fb1d79abc59/source&";
         searchFor += "sourcecategories=[\"${category}\"]";
         searchFor += "&sourceproperties={\"ffa22f8c-787f-4c40-9b3f-b5f358e3a4cb\":[\"${userName}\"]}`;
@@ -99,21 +108,9 @@
         return { query: searchFor };
     }
 
-    let getTodayDate = function () {
-        let date = new Date();
-        let day = date.getDate();
-        let month = date.getMonth() + 1;
-
-        day.toString().length > 1 ? day = day : day = '0' + day
-        month.toString().length > 1 ? month = month : month = '0' + month
-
-        let year = date.getFullYear();
-        return `${year}-${month}-${day}`;
-    }
-
     function createMap(fileName, oldFileName) {
 
-        return mapObject = {
+        return  {
             "filename": fileName,
             "sourceCategory": document.querySelector("#selectCategory").value,
             "sourceId": "/dms/r/73215d3a-ea55-4555-9817-9fb1d79abc59/source",
@@ -136,6 +133,84 @@
             }
         }
 
+    }
+
+    function createReceiptMap(fileName, oldFileName) {
+        return {
+            "filename": fileName,
+            "sourceCategory": document.querySelector("#selectCategory").value,
+            "sourceId": "/dms/r/73215d3a-ea55-4555-9817-9fb1d79abc59/source",
+            "contentLocationUri": "<to be replaced>",
+            "sourceProperties": {
+                "properties": [
+                    {
+                        "key": "fe508723-4bad-43ff-91e5-3811ebc73dbd", //Receipt Date
+                        "values": [`${getTodayDate()}`]
+                    },
+                    {
+                        "key": "9b861559-2ab9-41e1-943e-c362d03bb2ae", //File Name
+                        "values": [oldFileName]
+                    },
+                    {
+                        "key": "a51f3728-9fb7-4e3a-8397-f3445f593e33", //Reference ID
+                        "values": [`${codeGenerator(`PSL_RECPT`, 15)}`]
+                    },
+                    {
+                        "key": "03c15d36-1e46-41b8-a538-874064b6beac", // Receipt Type
+                        "values": [``]
+                    },
+                    {
+                        "key": "7638820e-cf51-4b72-acf4-1f48ced69c7c", // Amount Paid
+                        "values": [``]
+                    },
+                    {
+                        "key": "23df1a2a-f22c-43a5-b270-f569cc1688b5", // Other Party Name / Business Partner ID
+                        "values": [``]
+                    }
+                ]
+            }
+        }
+    }
+
+    function createContractMap(fileName, oldFileName) {
+        return {
+            "filename": fileName,
+            "sourceCategory": document.querySelector("#selectCategory").value,
+            "sourceId": "/dms/r/73215d3a-ea55-4555-9817-9fb1d79abc59/source",
+            "contentLocationUri": "<to be replaced>",
+            "sourceProperties": {
+                "properties": [
+                    {
+                        "key": "d6d30bfa-a201-458b-903f-88489b32f9d6", //Contract Date
+                        "values": [`${getTodayDate()}`]
+                    },
+                    {
+                        "key": "9b861559-2ab9-41e1-943e-c362d03bb2ae", //File Name
+                        "values": [oldFileName]
+                    },
+                    {
+                        "key": "2f959c20-94b4-4b7b-85c2-961182f2c247", //Contract ID
+                        "values": [`${codeGenerator(`PSL_RECPT`, 15)}`]
+                    },
+                    {
+                        "key": "7b8a7392-3c4d-4470-9b03-93d346fa5506", // Contract Name
+                        "values": [``]
+                    },
+                    {
+                        "key": "b2ac9f9d-e765-4d61-b30d-038f705d24ea", // Contract Amount
+                        "values": [``]
+                    },
+                    {
+                        "key": "23df1a2a-f22c-43a5-b270-f569cc1688b5", // Other Party Name / Business Partner ID
+                        "values": [``]
+                    },
+                    {
+                        "key": "91232b04-6003-43b1-8f3a-e91b4a92bf49", // Type of Contract
+                        "values": [``]
+                    },
+                ]
+            }
+        }
     }
 
     document.querySelector('#catId').addEventListener('change', function () {

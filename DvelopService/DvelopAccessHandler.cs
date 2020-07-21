@@ -40,19 +40,19 @@ namespace persol_poc_hustler.DvelopService
 
                         if (null != authSessionInfo.AuthSessionId)
                         {
-                            Console.WriteLine("login ok: " + "expires: " + authSessionInfo.Expire + ", sessionId: " + authSessionInfo.AuthSessionId);
+                            //Console.WriteLine("login ok: " + "expires: " + authSessionInfo.Expire + ", sessionId: " + authSessionInfo.AuthSessionId);
                             return authSessionInfo.AuthSessionId;
                         }
                     }
                     else
                     {
-                        Console.WriteLine("login failed with status code \"" + result.StatusCode + "\": " + baseRequest);
+                        return "login failed with status code \"" + result.StatusCode + "\": " + baseRequest;
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("login failed with error \"" + ex.Message + "\": " + baseRequest);
+                return  "login failed with error \"" + ex.Message + "\": " + baseRequest;
             }
             return null;
         }

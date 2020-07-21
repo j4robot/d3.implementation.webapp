@@ -71,6 +71,7 @@ namespace MenuManager.Controllers
             }
             catch(Exception ex)
             {
+                Console.WriteLine(ex);
                 if (file != null)
                 {
                     string filePathRoot = $"{_env.WebRootPath}\\clientDocs\\";

@@ -22,7 +22,7 @@ namespace MenuManager.HTTPServices
             Configuration = configuration;
         }
 
-        public async Task<string> GetToken()
+        public string GetToken()
         {
             return "";
         }
@@ -31,7 +31,7 @@ namespace MenuManager.HTTPServices
         {
             string data = null;
             HttpResponseMessage response = null;
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await GetToken());
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", GetToken());
 
             switch (method)
             {

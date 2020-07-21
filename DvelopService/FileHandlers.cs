@@ -14,6 +14,14 @@ namespace persol_poc_hustler.DvelopService
     {
         private static string MEDIA_TYPE_HAL_JSON = "application/hal+json";
         private static string MEDIA_TYPE_OCTET_STREAM = "application/octet-stream";
+
+        public static IConfiguration Configuration { get; set; }
+        public FileHandlers(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+
         //upload file in a whole
         public async Task<string> UploadFile(string baseURI, string sessionId, string repoId, string filePath, string uploadMappingFile)
         {
@@ -97,6 +105,7 @@ namespace persol_poc_hustler.DvelopService
         {
             var link_relation = "/dms/r/" + repoId + "/o2m";
             var baseRequest = baseURI + link_relation;
+            var sourceId = $"{Configuration["DvelopInfos:sourceId"]}";
 
             using (HttpClient client = new HttpClient())
             {
@@ -105,11 +114,9 @@ namespace persol_poc_hustler.DvelopService
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessionId);
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(MEDIA_TYPE_HAL_JSON));
 
-                //read mapping and replace content location uri
-                //dynamic dynObj = JsonConvert.DeserializeObject(File.ReadAllText(uploadMappingFile));
-                //dynObj.contentLocationUri = contentLocationUri;
+                //read mapping and replace content location uri and source Id
                 var output = uploadMappingFile.Replace("<to be replaced>", contentLocationUri);
-                //string output = JsonConvert.SerializeObject(dynObj);
+                output = output.Replace("<source to be replaced>", sourceId);
 
                 StringContent data = new StringContent(output);
                 data.Headers.ContentType = new MediaTypeWithQualityHeaderValue(MEDIA_TYPE_HAL_JSON);

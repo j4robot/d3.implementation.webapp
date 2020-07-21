@@ -21,7 +21,6 @@ function readExternalFile(file, mime, callback) {
 }
 
 function makeAPIRequest(url, method, data = "", callback) {
-    pageLoader('show');
 
     url = window.location.href.indexOf("localhost") > -1 ? url : `/hcm-apps-controls${url}`;
     
@@ -42,6 +41,7 @@ function makeAPIRequest(url, method, data = "", callback) {
     }
 
     function getRequest(url, callback) {
+        pageLoader('show');
         fetch(url).then(data => data.text()).then(data => {
             pageLoader('hide');
             callback(data)
@@ -52,6 +52,7 @@ function makeAPIRequest(url, method, data = "", callback) {
     }
 
     function deleteRequest(url, callback) {
+        pageLoader('show');
         fetch(url, {
             method: 'DELETE',
         }).then(res => res.text()).then(data => {
@@ -64,6 +65,7 @@ function makeAPIRequest(url, method, data = "", callback) {
     }
 
     function postOtPutRequest(url, method, data, callback) {
+        pageLoader('show');
         fetch(url, {
             method: method,
             headers: {
@@ -80,6 +82,7 @@ function makeAPIRequest(url, method, data = "", callback) {
     }
 
     function fileUploadRequest(url, method, data, callback) {
+        pageLoader('show');
         fetch(url, {
             method: 'POST',
             body: data,
@@ -237,3 +240,69 @@ function validateUser(){
 }
 
 let codeGenerator = (str, len) => `${str}-${Math.random().toString(36).substr(2, len).toUpperCase()}`;
+
+let getTodayDate = function () {
+    let date = new Date();
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+
+    day.toString().length > 1 ? day = day : day = '0' + day
+    month.toString().length > 1 ? month = month : month = '0' + month
+
+    let year = date.getFullYear();
+    return `${year}-${month}-${day}`;
+}
+
+let formatDate = function (psDate) {
+    let date = new Date(psDate);
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+
+    day.toString().length > 1 ? day = day : day = '0' + day
+    month.toString().length > 1 ? month = month : month = '0' + month
+
+    let year = date.getFullYear();
+    return `${year}-${month}-${day}`;
+}
+
+function postMasterFile(formData, metaData, modalName) {
+    try {
+
+        makeAPIRequest('/api/dvelop/uploadfile', 'FILE', formData, function (data) {
+
+            try {
+                data = JSON.parse(data);
+                postMasterFileToD3(data, metaData, modalName)
+
+            } catch (error) {
+                console.log(error);
+            }
+
+        });
+
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+function postMasterFileToD3(data, metaData, modalName) {
+    pageLoader('show');
+
+    makeAPIRequest('/api/dvelop/savefile', 'POST', { map: JSON.stringify(metaData(data.fileName, data.oldFileName)), filePath: data.filePath }, function (res) {
+        try {
+            console.log({ res });
+
+            if (res != "D3 sessionId error") {
+                $('#' + modalName).modal('hide');
+                messenger('success');
+            }
+            else {
+                messenger('warning');
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+
+    });
+}
