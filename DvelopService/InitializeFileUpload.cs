@@ -39,6 +39,7 @@ namespace AppyController.DvelopService
                 }
                 catch (Exception ex)
                 {
+                    result = "{error: 'Couldn't upload the file to D3'}";
                     Console.WriteLine(ex);
                 }
 
