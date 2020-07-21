@@ -10,7 +10,7 @@
 
     $('#txtUploadReceiptfile').on('change', function (event) {
 
-        $('#contractFileName').text(event.target.files[0].name);
+        $('#receiptFileName').text(event.target.files[0].name);
     });
 
     document.querySelector('#btnSendReceiptFile').addEventListener('click', function () {
@@ -46,7 +46,7 @@
                 "properties": [
                     {
                         "key": "fe508723-4bad-43ff-91e5-3811ebc73dbd", //Receipt Date
-                        "values": [`${getTodayDate()}`]
+                        "values": [`${formatDate(document.querySelector(`#receiptDate`).value)}`]
                     },
                     {
                         "key": "9b861559-2ab9-41e1-943e-c362d03bb2ae", //File Name
@@ -58,15 +58,15 @@
                     },
                     {
                         "key": "03c15d36-1e46-41b8-a538-874064b6beac", // Receipt Type
-                        "values": [``]
+                        "values": [`${document.querySelector(`#receiptType`).value}`]
                     },
                     {
-                        "key": "7638820e-cf51-4b72-acf4-1f48ced69c7c", // Amount Paid
-                        "values": [``]
+                        "key": "b172bd7a-27f7-442d-bf4b-8ea7439dcca5", // Amount
+                        "values": [`${document.querySelector(`#contractName`).value}`]
                     },
                     {
                         "key": "23df1a2a-f22c-43a5-b270-f569cc1688b5", // Other Party Name / Business Partner ID
-                        "values": [``]
+                        "values": [`${document.querySelector(`#receiptPartner`).value}`]
                     }
                 ]
             }

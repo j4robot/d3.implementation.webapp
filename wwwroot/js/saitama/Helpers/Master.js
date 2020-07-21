@@ -21,6 +21,7 @@ function readExternalFile(file, mime, callback) {
 }
 
 function makeAPIRequest(url, method, data = "", callback) {
+    pageLoader('show');
 
     url = window.location.href.indexOf("localhost") > -1 ? url : `/hcm-apps-controls${url}`;
     
@@ -41,7 +42,7 @@ function makeAPIRequest(url, method, data = "", callback) {
     }
 
     function getRequest(url, callback) {
-        pageLoader('show');
+        
         fetch(url).then(data => data.text()).then(data => {
             pageLoader('hide');
             callback(data)
@@ -52,7 +53,6 @@ function makeAPIRequest(url, method, data = "", callback) {
     }
 
     function deleteRequest(url, callback) {
-        pageLoader('show');
         fetch(url, {
             method: 'DELETE',
         }).then(res => res.text()).then(data => {
@@ -65,7 +65,6 @@ function makeAPIRequest(url, method, data = "", callback) {
     }
 
     function postOtPutRequest(url, method, data, callback) {
-        pageLoader('show');
         fetch(url, {
             method: method,
             headers: {
@@ -82,15 +81,12 @@ function makeAPIRequest(url, method, data = "", callback) {
     }
 
     function fileUploadRequest(url, method, data, callback) {
-        pageLoader('show');
         fetch(url, {
             method: 'POST',
             body: data,
         }).then(data => data.text()).then(data => {
-            pageLoader('hide');
             callback(data)
         }).catch((error) => {
-            pageLoader('hide');
             callback(error)
         });
     }
@@ -168,6 +164,36 @@ function messenger(message, mssge = '') {
             break;
     }
 }
+
+function moneyInTxt(value, standard, dec = 0) {
+    nf = new Intl.NumberFormat(standard, {
+        minimumFractionDigits: dec,
+        maximumFractionDigits: 2
+    });
+    return nf.format(Number(value) ? value : 0.00);
+};
+
+function commaRemover(value) {
+    value = value.replace(/,/g, '');
+    return parseFloat(value);
+};
+
+$('.moneyformat').focusout(function () {
+    $(this).val(commaRemover($(this).val()));
+    $(this).val(moneyInTxt($(this).val(), 'en', 2));
+});
+
+
+$('.moneyformat').focus(function () {
+    $(this).val(Number($(this).val()) === 0 ? "" : commaRemover($(this).val()));
+});
+
+$('.moneyformat').keydown(function (e) {
+    if (!e.key.match(/^[0-9.()]+$/) && Number(e.key.length) === 1) {
+        e.preventDefault();
+        return;
+    }
+});
 
 function GetCurrentPageName() {
     var url = window.location.pathname;
