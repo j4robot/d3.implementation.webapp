@@ -1,0 +1,248 @@
+﻿.project-add-button {
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+.table th,
+.table td {
+    padding: 0.3rem;
+}
+
+
+/*.iziToast-theme-light{
+    
+}*/
+
+.success-color {
+    background-color: lightgreen;
+}
+
+.app-header-row {
+    margin: 10px !important;
+}
+
+
+/*Set a min width where your table start to look like crap*/
+
+table {
+    min-width: 600px;
+}
+
+
+/*The next 3 sections make the magic happen*/
+
+thead,
+tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+tbody {
+    display: block;
+    max-height: 390px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/*Use the following to make sure cols align correctly*/
+
+table,
+tr,
+th,
+td {
+    /*border: 1px solid black;*/
+    border-collapse: collapse;
+}
+
+.custom-md5 {
+    border: 1px solid #5e72e4;
+    overflow: hidden;
+    height: 300px;
+    overflow-y: scroll;
+}
+
+
+/* Remove default bullets */
+
+ul,
+#myUL {
+    list-style-type: none;
+}
+
+
+/* Remove margins and padding from the parent ul */
+
+#myUL {
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+}
+
+.tt {
+    cursor: pointer;
+    user-select: none;
+    background-color: #f1fafb;
+}
+
+
+/* Style the caret/arrow */
+
+.caret {
+    cursor: pointer;
+    user-select: none;
+    /* Prevent text selection */
+}
+
+
+/* Create the caret/arrow with a unicode, and style it */
+
+.caret::before {
+    content: "\25B6";
+    color: black;
+    display: inline-block;
+    margin-right: 6px;
+}
+
+
+/* Rotate the caret/arrow icon when clicked on (using JavaScript) */
+
+.caret-down::before {
+    transform: rotate(90deg);
+}
+
+
+/* Hide the nested list */
+
+.nested {
+    display: none;
+}
+
+
+/* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
+
+.active {
+    display: block;
+}
+
+input[type=checkbox] {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+}
+
+.label-checkbox {
+    cursor: pointer;
+    text-indent: -9999px;
+    width: 50px;
+    height: 25px;
+    background: grey;
+    display: block;
+    border-radius: 10px;
+    position: relative;
+}
+
+.label-checkbox:after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 15px;
+    height: 15px;
+    background: #fff;
+    border-radius: 20px;
+    transition: 0.3s;
+}
+
+input:checked+.label-checkbox {
+    background: #5e72e4;
+}
+
+input:checked+.label-checkbox:after {
+    left: calc(100% - 5px);
+    transform: translateX(-100%);
+}
+
+label:active:after {
+    width: 100px;
+}
+
+.list-group-item {
+    line-height: 7px !important;
+}
+
+.list-group-item:first-child {
+    margin-top: 7px;
+}
+
+.iziToast-message{
+    color: #FFF;
+}
+
+
+body {
+    color: #212121 !important;
+}
+
+option {
+    color: #212121 !important;
+}
+
+.dropdown.dropdown-lg .dropdown-menu {
+    margin-top: -1px;
+    padding: 6px 20px;
+}
+
+.input-group-btn .btn-group {
+    display: flex !important;
+}
+
+.btn-group .btn {
+    border-radius: 0;
+    margin-left: -1px;
+}
+
+    .btn-group .btn:last-child {
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+    }
+
+.btn-group .form-horizontal .btn[type="submit"] {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.form-horizontal .form-group {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.form-group .form-control:last-child {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+@media screen and (min-width: 768px) {
+    #adv-search {
+        width: 500px;
+        margin: 0 auto;
+    }
+
+    .dropdown.dropdown-lg {
+        position: static !important;
+    }
+
+        .dropdown.dropdown-lg .dropdown-menu {
+            min-width: 500px;
+        }
+}
+
+.form-control {
+    border: 1px solid #ccc;
+}

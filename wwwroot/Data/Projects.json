@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "name": "Human Resource Management",
+    "status": 1,
+    "description": "",
+    "createdDate": "2020-01-22 16:28:21.493"
+  },
+  {
+    "id": 2,
+    "name": "National Petroleum Authority",
+    "status": 0,
+    "description": "",
+    "createdDate": "2020-01-22 16:28:21.493"
+  },
+   {
+    "id": 3,
+    "name": "iTaPs Applications",
+    "status": 1,
+    "description": "",
+    "createdDate": "2020-01-22 16:28:21.493"
+  }
+]

@@ -1,0 +1,21 @@
+﻿table.treetable {
+    border-collapse: collapse;
+    margin: .6em 0 1.8em 0;
+    width: 100%;
+}
+    
+
+    table.treetable tr.branch {
+        background-color: #eaf2f4;
+    }
+
+    table.treetable tr.selected {
+        background-color: #3875d7;
+        color: #fff;
+    }
+
+    table.treetable tr span.indenter a {
+        outline: none; /* Expander shows outline after upgrading to 3.0 (#141) */
+    }
+
+    

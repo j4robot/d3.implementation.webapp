@@ -1,0 +1,121 @@
+﻿
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Applications";
+}
+
+<div class="row">
+    <div class="col">
+        <div class="card shadow">
+            <div class="form-group row app-header-row">
+                <div class="col-md-3">
+                    <select class="form-control" id="slctProject"></select>
+                </div>
+                <div class="col-md-3"></div>
+                <div class="col-md-3 text-right">
+                    <div class="input-group add-on">
+                        <input class="form-control" placeholder="Search for app by name" name="srchTerm" id="srchTerm" type="text" disabled style="font-size: 12px" />
+                        <div class="input-group-btn">
+                            <button class="btn form-control" type="submit" id="btnSearch" style="border: 1px solid #cad1d7; " disabled><i class="fa fa-search"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 text-right">
+                    <div class="text-right">
+                        <button class="btn btn-primary text-right project-add-button" id="btnAddApp">Add @ViewData["Title"]</button>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table align-items-center table-flush">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Prefix</th>
+                            <th scope="col">App Name</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Date Created</th>
+                            <th scope="col" class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="apps-tbody"></tbody>
+                </table>
+            </div>
+            <div class="card-footer py-4">
+                <nav aria-label="...">
+                    <ul class="pagination justify-content-end mb-0">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">
+                                <i class="fa fa-angle-left"></i>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                        </li>
+                        @*<li class="page-item active">
+                            <a class="page-link" href="#">1</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>*@
+                        <li class="page-item">
+                            <a class="page-link" href="#">
+                                <i class="fa fa-angle-right"></i>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+@section Modals{
+    <div class="modal fade" id="appModal" role="dialog" data-backdrop="static" data-keyboard="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> <i class="far fa-times-circle text-danger"></i> </button>
+                </div>
+                <form class="form-horizontal" id="appForm">
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-md-8">
+                                <label class="control-label">Name</label>
+                                <input class="form-control" type="text" name="description" id="description" required />
+                            </div>
+                            <div class="col-md-2"></div>
+                            <div class="col-md-2" style="margin-top: 10px;">
+                                <label class="control-label">Status</label>
+                                <input type="checkbox" id="switch" /><label for="switch" class="label-checkbox">Toggle</label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-8">
+                                <label class="control-label">URL</label>
+                                <input class="form-control" type="text" name="txtWebsite" id="txtWebsite" required />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="control-label">Prefix</label>
+                                <input class="form-control" type="text" name="txtPrefix" id="txtPrefix" required />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <label class="control-label">Description</label>
+                                <textarea class="form-control" rows="3" id="notes"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="pull-left"></div>
+                        <button type="button" class="btn btn-success btn-sm" id="btnSave">Save</button>
+                        <button type="reset" class="btn btn-link text-danger btn-sm" id="btnClose">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts{
+    <script src="~/js/saitama/PageJSFiles/Applications.js" asp-append-version="true"></script>
+}
