@@ -4,6 +4,8 @@
 
 }
 
+let path_u_ = window.location.href.indexOf("localhost") > -1 ? `${window.location.origin}/` : `${window.location.origin}/<app-folder>/`;
+
 function readExternalFile(file, mime, callback) {
     let overrideMime = ''
 

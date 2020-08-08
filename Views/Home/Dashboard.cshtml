@@ -48,7 +48,7 @@
                     <div class="modal-body">
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="control-label">Contract Name</label>
+                                <label class="control-label">Contract ID</label>
                                 <input class="form-control" type="text" name="contractPartnerSearch" id="contractPartnerSearch" required />
                             </div>
                             <div class="col-md-6">
@@ -96,7 +96,7 @@
                     <div class="modal-body">
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="control-label">Client's Name</label>
+                                <label class="control-label">Receipt ID / Reference No.</label>
                                 <input class="form-control" type="text" name="receiptPartnerSearch" id="receiptPartnerSearch" required />
                             </div>
                             <div class="col-md-6">
@@ -154,6 +154,12 @@
                             </dl>
 
                             <button type="submit" class="btn btn-primary" id="btnSumbitContract">Submit File</button>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <label class="control-label">Contract ID</label>
+                                <input class="form-control" type="text" name="contractID" id="contractID" required />
+                            </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
@@ -228,6 +234,10 @@
                             <button type="submit" class="btn btn-primary" id="btnSumbitReceipt">Submit File</button>
                         </div>
                         <div class="form-group row">
+                            <div class="col-md-6">
+                                <label class="control-label">Receipt ID / Reference No.</label>
+                                <input class="form-control" type="text" name="receiptID" id="receiptID" required />
+                            </div>
                             <div class="col-md-6">
                                 <label class="control-label">Amount</label>
                                 <input class="form-control moneyformat" type="text" name="receiptAmount" id="receiptAmount" required />

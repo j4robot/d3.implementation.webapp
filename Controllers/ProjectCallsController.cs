@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using AppyController.DvelopService;
 using AppyController.Models;
 using MenuManager.HTTPServices;
@@ -22,6 +23,7 @@ namespace MenuManager.Controllers
         MethodAPIRequest methodAPIRequest = new MethodAPIRequest();
         public IConfiguration Configuration { get; set; }
         private readonly IWebHostEnvironment _env;
+
         public ProjectCallsController(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
@@ -50,7 +52,7 @@ namespace MenuManager.Controllers
                 clearFolder();
                 if (file != null)
                 {
-                    string filePathRoot = $"{_env.WebRootPath}\\clientDocs\\";
+                    string filePathRoot = $"{_env.WebRootPath}\\Data\\D3_Uploads\\";
                     var fileName = file.FileName;
 
                     string[] filNameSplit = fileName.Split(".");
@@ -74,7 +76,7 @@ namespace MenuManager.Controllers
                 Console.WriteLine(ex);
                 if (file != null)
                 {
-                    string filePathRoot = $"{_env.WebRootPath}\\clientDocs\\";
+                    string filePathRoot = $"{_env.WebRootPath}\\Data\\D3_Uploads\\";
                     var fileName = file.FileName;
 
                     string[] filNameSplit = fileName.Split(".");
@@ -101,7 +103,7 @@ namespace MenuManager.Controllers
 
         public void clearFolder()
         {
-            string filePathRoot = $"{_env.WebRootPath}\\clientDocs\\";
+            string filePathRoot = $"{_env.WebRootPath}\\Data\\D3_Uploads\\";
 
             DirectoryInfo di = new DirectoryInfo(filePathRoot);
 
@@ -109,11 +111,13 @@ namespace MenuManager.Controllers
             {
                 file.Delete();
             }
+
             foreach (DirectoryInfo dir in di.GetDirectories())
             {
                 dir.Delete(true);
             }
         }
+
 
         [HttpPost("api/dvelop/savefile")]
         public string PostFileToDvelop([FromBody] SaveFileData data)
@@ -134,15 +138,70 @@ namespace MenuManager.Controllers
             var apiKey = $"{Configuration["DvelopInfos:API_Key"]}";
             var repoId = $"{Configuration["DvelopInfos:repoId"]}";
 
-            var searchFor = "?sourceid=/dms/r/73215d3a-ea55-4555-9817-9fb1d79abc59/source&";
-            searchFor += "sourcecategories=[\"2d0d6593-9391-4e9e-a95a-9a28ce3a901c\"]";
-            searchFor += "&sourceproperties={\"9b861559-2ab9-41e1-943e-c362d03bb2ae\":[\"HCM Payroll\"]}";
-
             var sessionId = new DvelopAccessHandler().Authenticate(baseURI, apiKey);
+
             if(sessionId != null)
             {
                 var newData = await new DocumentHandlers().SearchDocument(baseURI, sessionId, repoId, data.query); //data.query
                 return newData;
+            }
+
+            return String.Empty;
+        }
+
+        [HttpPost("api/dvelop/download-document")]
+        public async Task<string> DownloadFile([FromBody]SearchData data)
+        {
+            var baseURI = $"{Configuration["DvelopInfos:BaseURL"]}";
+            var apiKey = $"{Configuration["DvelopInfos:API_Key"]}";
+            var repoId = $"{Configuration["DvelopInfos:repoId"]}";
+            string filePathRoot = $"{_env.WebRootPath}\\Data\\D3_Downloads\\";
+
+            var sessionId = new DvelopAccessHandler().Authenticate(baseURI, apiKey);
+
+            if (sessionId != null)
+            {
+                string downloadFile = "";
+                DocumentHandlers docHandler = new DocumentHandlers();
+
+                string getDocumentInfo = await docHandler.GetDocumentInfo(baseURI, sessionId, repoId, data.query); 
+
+                if(getDocumentInfo != "")
+                {
+                    downloadFile = await docHandler.DownloadDocument(baseURI, sessionId, repoId, getDocumentInfo, filePathRoot); //data.query
+                    //DeleteDocumentInTimer(filePathRoot);
+                }
+
+                return downloadFile;
+            }
+
+            return String.Empty;
+        }
+
+        [HttpPost("api/dvelop/preview-document")]
+        public async Task<string> PreviewFile([FromBody] SearchData data)
+        {
+            var baseURI = $"{Configuration["DvelopInfos:BaseURL"]}";
+            var apiKey = $"{Configuration["DvelopInfos:API_Key"]}";
+            var repoId = $"{Configuration["DvelopInfos:repoId"]}";
+            string filePathRoot = $"{_env.WebRootPath}\\Data\\D3_Previews\\";
+
+            var sessionId = new DvelopAccessHandler().Authenticate(baseURI, apiKey);
+
+            if (sessionId != null)
+            {
+                string downloadFile = "";
+                DocumentHandlers docHandler = new DocumentHandlers();
+
+                string getDocumentInfo = await docHandler.GetDocumentInfo(baseURI, sessionId, repoId, data.query);
+
+                if (getDocumentInfo != "")
+                {
+                    downloadFile = await docHandler.DownloadDocument(baseURI, sessionId, repoId, getDocumentInfo, filePathRoot); //data.query
+                    //DeleteDocumentInTimer(filePathRoot);
+                }
+
+                return downloadFile;
             }
 
             return String.Empty;
@@ -166,6 +225,8 @@ namespace MenuManager.Controllers
 
             return lowerCase ? builder.ToString().ToLower() : builder.ToString();
         }
+
+        
     }
 
     public class SearchData

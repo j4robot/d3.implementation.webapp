@@ -6,7 +6,9 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace persol_poc_hustler.DvelopService
 {
@@ -15,6 +17,7 @@ namespace persol_poc_hustler.DvelopService
       
 
         private static string MEDIA_TYPE_HAL_JSON = "application/hal+json";
+        System.Timers.Timer timer;
 
         //search document by given metadata
         public async Task<string> SearchDocument(string baseURI, string sessionId, string repoId, string searchFor)
@@ -54,7 +57,7 @@ namespace persol_poc_hustler.DvelopService
             return String.Empty;
         }
 
-        private async static Task<string> GetDocumentInfo(string baseURI, string sessionId, string repoId, string documentLink)
+        public async Task<string> GetDocumentInfo(string baseURI, string sessionId, string repoId, string documentLink)
         {
 
             var link_relation = documentLink;
@@ -81,22 +84,40 @@ namespace persol_poc_hustler.DvelopService
             return null;
         }
 
-        private async static Task<bool> DownloadDocument(string baseURI, string sessionId, string repoId, string jsonDocumentInfo, string downloadFilePath)
+        private void DeleteDocumentIn50Secs(string filePathRoot)
+        {
+            timer = new System.Timers.Timer();
+            timer.Interval = (30000);
+            //timer.Elapsed += OnTimedEvent;
+            string[] Files = Directory.GetFiles(filePathRoot);
+            for (int i = 0; i < Files.Length; i++)
+            {
+                //Here we will find wheter the file is 7 days old
+                if (DateTime.Now.Subtract(File.GetCreationTime(Files[i])).TotalMilliseconds > 20000)
+                {
+                    File.Delete(Files[i]);
+                }
+            }
+            timer.Enabled = true;
+            timer.Start();
+        }
+
+        public async Task<string> DownloadDocument(string baseURI, string sessionId, string repoId, string jsonDocumentInfo, string downloadFilePath)
         {
             dynamic documentInfo = JsonConvert.DeserializeObject<object>(jsonDocumentInfo);
             var link_relation = documentInfo._links.mainblobcontent.href;
             var baseRequest = baseURI + link_relation;
 
             var fileName = "";
+            //{key: "f6d948fb-f757-4c88-83bd-6e1e7da9e2f0", value: "laptop-request-form.pdf", isMultiValue: false}
             foreach (var prop in documentInfo.sourceProperties)
             {
-                if (prop.key == "dateiname")
+                if (prop.key == "property_filename")
                 {
                     fileName = prop.value;
                     break;
                 }
             }
-
 
             using (HttpClient client = new HttpClient())
             {
@@ -114,20 +135,60 @@ namespace persol_poc_hustler.DvelopService
                     Stream stream = await result.Content.ReadAsStreamAsync().ConfigureAwait(false);
                     Directory.CreateDirectory(downloadFilePath);
                     string filePath = Path.Combine(downloadFilePath, fileName);
-                    using (FileStream fs = new FileStream(filePath, FileMode.Create))
+
+                    try
                     {
-                        stream.CopyTo(fs);
-                        fs.Flush();
+                        DeleteDocumentIn50Secs(downloadFilePath);
+
+                        // Check if file exists with its full path    
+                        if (File.Exists(Path.Combine(filePath, fileName)))
+                        {
+                            // If file found, delete it    
+                            File.Delete(Path.Combine(filePath, fileName));
+                            using (FileStream fs = new FileStream(filePath, FileMode.Create))
+                            {
+                                stream.CopyTo(fs);
+                                fs.Flush();
+                            }
+                            Console.WriteLine("document downloaded to " + filePath);
+
+                            return fileName;
+
+                        }
+                        else
+                        {
+                            using (FileStream fs = new FileStream(filePath, FileMode.Create))
+                            {
+                                stream.CopyTo(fs);
+                                fs.Flush();
+                            }
+                            Console.WriteLine("document downloaded to " + filePath);
+
+                            return fileName;
+                        }
                     }
-                    Console.WriteLine("document downloaded to " + filePath);
-                    return true;
+                    catch (IOException ioExp)
+                    {
+                        DeleteDocumentIn50Secs(downloadFilePath);
+
+                        Console.WriteLine(ioExp.Message);
+                        using (FileStream fs = new FileStream(filePath, FileMode.Create))
+                        {
+                            stream.CopyTo(fs);
+                            fs.Flush();
+                        }
+                        Console.WriteLine("document downloaded to " + filePath);
+
+                        return fileName;
+                    }
+
                 }
                 else
                 {
                     Console.WriteLine("document download failed");
                 }
             }
-            return false;
+            return "No File";
         }
     }
 }

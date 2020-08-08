@@ -2,6 +2,7 @@
 
     document.querySelector('#btnOpenUploadContractModal').addEventListener('click', function () {
         $('#uploadContractModal').modal('toggle');
+        document.querySelector(`#contractID`).value = codeGenerator(`PSL_RECPT`, 10);
     });
 
     document.querySelector('#btnUploadContractFile').addEventListener('click', function () {
@@ -39,37 +40,37 @@
     function createContractMap(fileName, oldFileName) {
         return {
             "filename": fileName,
-            "sourceCategory": "20d10859-02dc-4353-952c-4889ca9b88ea",
+            "sourceCategory": "55c3fc23-89d7-46d8-af5f-fbc3ca3260f3",
             "sourceId": "<source to be replaced>",
             "contentLocationUri": "<to be replaced>",
             "sourceProperties": {
                 "properties": [
                     {
-                        "key": "d6d30bfa-a201-458b-903f-88489b32f9d6", //Contract Date
+                        "key": "71cf0e44-2822-4843-83f9-42335b937694", //Contract Date
                         "values": [`${formatDate(document.querySelector(`#contractDate`).value)}`]
                     },
                     {
-                        "key": "9b861559-2ab9-41e1-943e-c362d03bb2ae", //File Name
+                        "key": "f6d948fb-f757-4c88-83bd-6e1e7da9e2f0", //File Name
                         "values": [oldFileName]
                     },
                     {
-                        "key": "2f959c20-94b4-4b7b-85c2-961182f2c247", //Contract ID
-                        "values": [`${codeGenerator(`PSL_CNTRT`, 15)}`]
+                        "key": "3dc5e9c1-cb1f-401a-9a10-d60dd4aa3e9e", //Contract ID
+                        "values": [`${document.querySelector(`#contractID`).value}`]
                     },
                     {
-                        "key": "7b8a7392-3c4d-4470-9b03-93d346fa5506", // Contract Name
+                        "key": "803c3412-f1f2-4ca4-8a94-186018c77c7b", // Contract Name
                         "values": [`${document.querySelector(`#contractName`).value}`]
                     },
                     {
-                        "key": "b2ac9f9d-e765-4d61-b30d-038f705d24ea", // Contract Amount
+                        "key": "7bad7561-d75e-4419-bcf0-f93bc5368482", // Contract Amount
                         "values": [`${document.querySelector(`#contractAmount`).value}`]
                     },
                     {
-                        "key": "23df1a2a-f22c-43a5-b270-f569cc1688b5", // Other Party Name / Business Partner ID
+                        "key": "9826cdb6-7523-4aac-a92a-58a5914e7bf6", // Other Party Name / Business Partner ID
                         "values": [`${document.querySelector(`#contractPartner`).value}`]
                     },
                     {
-                        "key": "91232b04-6003-43b1-8f3a-e91b4a92bf49", // Type of Contract
+                        "key": "0f003620-42eb-4b6e-9a21-9556bca1a567", // Type of Contract
                         "values": [`${document.querySelector(`#contractType`).value}`]
                     },
                 ]
@@ -81,12 +82,12 @@
         $('#contractSearchModal').modal('toggle');
     });
 
-    function searchForDocument(date, recieptType, clientName) {
+    function searchForDocument(date, recieptType, contractID) {
 
-        let searchFor = `?sourceid=/dms/r/73215d3a-ea55-4555-9817-9fb1d79abc59/source&";
-        searchFor += "sourcecategories=[\"20d10859-02dc-4353-952c-4889ca9b88ea\"]";
-        searchFor += "&sourceproperties={\"d6d30bfa-a201-458b-903f-88489b32f9d6\":[\"${date}\"]\,"91232b04-6003-43b1-8f3a-e91b4a92bf49\":[\"${recieptType}\"]\,
-                        "7b8a7392-3c4d-4470-9b03-93d346fa5506\":[\"${clientName}\"]}`;
+        let searchFor = `?sourceid=/dms/r/44d69246-11b3-40e1-810b-1e746d219515/source&";
+        searchFor += "sourcecategories=[\"55c3fc23-89d7-46d8-af5f-fbc3ca3260f3\"]";
+        searchFor += "&sourceproperties={\"71cf0e44-2822-4843-83f9-42335b937694\":[\"${date}\"]\,"0f003620-42eb-4b6e-9a21-9556bca1a567\":[\"${recieptType}\"]\,
+                        "3dc5e9c1-cb1f-401a-9a10-d60dd4aa3e9e\":[\"${contractID}\"]}`;
 
         return { query: searchFor };
     }
@@ -114,11 +115,15 @@
 
                     let view = '';
                     items.forEach(data => {
-                        view += `<li class="list-group-item">Document ID: <span id="doc-id-${data.sourceProperties[8].value}">${data.sourceProperties[8].value}</span></li>
-                                 <li class="list-group-item">File Name: <span id="file-name-${data.sourceProperties[28].value}">${data.sourceProperties[28].value}</span></li>
-                                 <li class="list-group-item">File Type: <span id="file-name-${data.sourceProperties[10].value}"> <span style="font-size: 15px" class="text-primary ${favicon[data.sourceProperties[10].value.toLowerCase()]}"></span> _________ </span> 
-                                      <a target="_blank" href="${`https://achanademo.d-velop.cloud/` + data._links.self.href}" class="btn btn-sm btn-primary text-right">Preview</a> 
-                                      <a href="${`https://achanademo.d-velop.cloud/` + data._links.mainblobcontent.href}" class="btn btn-sm btn-success text-right">Download</a></li>`;
+                        let documentId = data.sourceProperties.filter(x => x.key === 'property_document_id')[0].value;
+                        let fileName = data.sourceProperties.filter(x => x.key === 'f6d948fb-f757-4c88-83bd-6e1e7da9e2f0')[0].value;
+                        let fileType = data.sourceProperties.filter(x => x.key === 'property_filetype')[0].value;
+
+                        view += `<li class="list-group-item">Document ID: <span id="doc-id-${documentId}">${documentId}</span></li>
+                                 <li class="list-group-item">File Name: <span id="file-name-${fileName}">${fileName}</span></li>
+                                 <li class="list-group-item">File Type: <span id="file-name-${fileType}"> <span style="font-size: 15px" class="text-primary ${favicon[fileType.toLowerCase()]}"></span> _________ </span> 
+                                      <a id="${data._links.self.href}" class="btn btn-sm btn-primary text-right preview-document-contract">Preview</a> 
+                                      <a id="${data._links.self.href}" class="btn btn-sm btn-success text-right download-document-contract">Download</a></li>`;
 
                     });
 
@@ -134,5 +139,54 @@
 
         });
     });
+
+    $(document).on('click', '.preview-document-contract', function () {
+
+        makeAPIRequest('/api/dvelop/preview-document', 'POST', { query: this.id }, function (res) {
+            try {
+                console.log(res);
+                initiatePreviewFile(res);
+            } catch (error) {
+                console.log(error);
+            }
+
+        });
+
+    });
+
+    $(document).on('click', '.download-document-contract', function () {
+        console.log(true, 'download');
+        makeAPIRequest('/api/dvelop/download-document', 'POST', { query: this.id }, function (res) {
+            try {
+                console.log(res);
+                initiateDownloadFile(res);
+            } catch (error) {
+                console.log(error);
+            }
+
+        });
+
+    });
+
+    function initiateDownloadFile(fileName) {
+
+        let element = document.createElement('a');
+        element.setAttribute('href', path_u_ + 'Data/D3_Downloads/' + fileName);
+        element.setAttribute('download', fileName);
+
+        element.style.display = 'none';
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
+    }
+
+    function initiatePreviewFile(fileName) {
+
+        let pageUrl = path_u_ + 'Home/Language?PreviewFile=' + fileName;
+
+        window.open(pageUrl, "_blank");
+    }
 
 });
