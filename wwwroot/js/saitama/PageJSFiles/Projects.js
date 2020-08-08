@@ -1,4 +1,5 @@
-﻿$(document).ready(function () {
+//Preview js file for referencing.
+$(document).ready(function () {
 
     document.querySelector('#btnOpenUploadFileModal').addEventListener('click', function () {
         $('#uploadFileModal').modal('toggle');
