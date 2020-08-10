@@ -72,6 +72,7 @@
         }
     }
 
+    // PSL_RECPT-OETE2FGH6T
     document.querySelector('#btnOpenReceiptSearchModal').addEventListener('click', function () {
         $('#receiptSearchModal').modal('toggle');
     });
