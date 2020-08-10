@@ -1,0 +1,29 @@
+﻿object {
+    width: 700px;
+    height: 800px;
+    margin-top: 0em;
+}
+
+.included {
+    background-color: #ffe;
+    font-size: 12px;
+    font-family: 'Droid Serif';
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px !important;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey !important;
+    border-radius: 10px !important;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #272c33 !important;
+    border-radius: 10px !important;
+}
+
